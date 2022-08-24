@@ -1,14 +1,19 @@
 import React from 'react'
+import AppBar from '@mui/material/AppBar';
+import { Toolbar } from '@mui/material';
+import { Typography } from '@mui/material';
 
 interface HeaderProps {
   
 }
 type HeaderComponent = (props: HeaderProps) => JSX.Element;
 
-export const ProgrammingPage: HeaderComponent = ({}) => {
+export const Header: HeaderComponent = ({}) => {
   return (
-    <div>
-    
-    </div>
+    <AppBar>
+      <Toolbar>
+        <Typography variant="h3">CodeTogether</Typography>
+      </Toolbar>
+    </AppBar>
   )
 }
