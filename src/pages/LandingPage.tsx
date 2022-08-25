@@ -1,12 +1,12 @@
 import React from 'react'
 import Button from '@mui/material/Button';
 
-interface LandingPageProps {};
+interface LandingPageProps { };
 
 type LandingPageComponent = (props: LandingPageProps) => JSX.Element;
 
 export const LandingPage: LandingPageComponent = () => {
   return (
-    <Button variant="contained">HUGE BUTTON</Button>
+    <Button variant="contained" size="large">Username Here</Button>
   )
 }
