@@ -1,21 +1,33 @@
 import React from 'react';
-import { LandingPage } from "./pages/LandingPage";
-import { ProgrammingPage } from "./pages/ProgrammingPage";
+import { LandingPage } from "./routes/LandingPage";
+import { ProgrammingPage } from "./routes/ProgrammingPage";
 import { Header } from "./components/Header";
 import './App.css';
-import { BrowserRouter } from 'react-router-dom';
-import { Toolbar } from '@mui/material';
+import {
+  Routes,
+  Route,
+  Link,
+} from "react-router-dom";
 
-function App() {
+export default function App() {
 
   return (
-    <BrowserRouter>
-      <Header/>
-      <Toolbar/>
-      <LandingPage></LandingPage>
-    </BrowserRouter>
-    
+    <>
+    <Routes>
+   {/* <Header/> */}
+      <Route path="/" element={<LandingPage/>} />
+      <Route path="/programmingpage" element={<ProgrammingPage/>} />
+      <Route
+        path="*"
+        element={
+          <main style={{ padding: "1rem" }}>
+            <p>There's nothing here!</p>
+          </main>
+        }
+      />
+    </Routes>
+    </>
   );
 }
+  
 
-export default App;
