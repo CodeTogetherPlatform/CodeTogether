@@ -27,7 +27,7 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
     useEffect(()=> {
         //handling errors
          socket.on('error-event', (error: any) => {
-            console.log(error);
+            console.log('error:', error);
         })
         
         // emits an event to get all the rooms
@@ -37,7 +37,7 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
         socket.on('send-all-rooms', (rooms: any)=>{
           let roomListArray = [];
           for(let i = 0; i < rooms.length; i++){
-            if(String(rooms[i][0]).length === 6 && rooms[i][1].size <= 2){
+            if(String(rooms[i][0]).length === 6 /* && rooms[i][1].size <= 2*/){
               roomListArray.push(rooms[i][0])
             }
           }
@@ -46,6 +46,7 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
 
         // receives an event to start programming and redirects users
         socket.on('start-programming', (roomId: any) => {
+            console.log('time to redirect to programming page with roomId: ', roomId)
             /**
              * Redirect users to the programming page with the roomId as a parameter
              */
