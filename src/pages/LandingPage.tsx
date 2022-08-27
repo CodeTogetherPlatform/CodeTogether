@@ -8,6 +8,7 @@ interface LandingPageProps {
     socket: any;
 };
 
+// this is needed to use the option tag as a JSX Element in the MUI Select component
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -20,7 +21,7 @@ type LandingPageComponent = (props: LandingPageProps) => JSX.Element;
 
 export const LandingPage: LandingPageComponent = ({ setUserName, userName, socket }) => {
     // have state for rooms
-    const [roomList, setRoomList] = useState<any[]>([]);
+    const [roomList, setRoomList] = useState<string[]>([]);
     const [roomToJoin, setRoomToJoin] = useState<null | string>(null)
     
     // establish event listeners 
@@ -34,14 +35,9 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
         socket.emit('get-rooms');
 
         // receives an event to get the rooms and adds them to state
-        socket.on('send-all-rooms', (rooms: any)=>{
-          let roomListArray = [];
-          for(let i = 0; i < rooms.length; i++){
-            if(String(rooms[i][0]).length === 6 /* && rooms[i][1].size <= 2*/){
-              roomListArray.push(rooms[i][0])
-            }
-          }
-          setRoomList(roomListArray);
+        socket.on('send-all-rooms', (rooms: Array<string>)=>{
+            console.log(rooms)
+          setRoomList(rooms);
         });
 
         // receives an event to start programming and redirects users
@@ -56,11 +52,12 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
     // starts a session, making sure the session id doesn't already exist
     const startSession = () => {
         // each session id is a 6 length integer
+        // enusure that the 6 digit integer is unique
         let randomRoomInt = Math.floor(Math.random() * 1000000);
         while(roomList.some((el) => el[0] === randomRoomInt.toString())){
           randomRoomInt = Math.floor(Math.random() * 1000000);
         }
-        socket.emit('start-session', randomRoomInt);
+        socket.emit('start-session', String(randomRoomInt));
     };
 
     // join a session, depending on the room selected

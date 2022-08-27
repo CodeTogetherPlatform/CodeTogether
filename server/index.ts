@@ -9,9 +9,20 @@ const io = new Server(3001, {
 io.on('connection', (socket: any) => {
   console.log('someone is connected', socket.id);
 
+  const filterRoomsWithTwo = (roomList: Map<string, Set<string>>) => {
+    const arrayRoomList = Array.from(roomList);
+    let filteredRoomList: Array<string> = [];
+    for(let i = 0; i < arrayRoomList.length; i++){
+      if(arrayRoomList[i][0].length === 6 && arrayRoomList[i][1].size === 1){
+        filteredRoomList.push(arrayRoomList[i][0]);
+      }
+    }
+    return filteredRoomList;
+  }
+
   //emits all rooms, on the event 'send-all-rooms'
   socket.on('get-rooms', () => {
-    io.to(socket.id).emit('send-all-rooms', Array.from(io.sockets.adapter.rooms));
+    io.to(socket.id).emit('send-all-rooms', filterRoomsWithTwo(io.sockets.adapter.rooms));
   });
 
   // create room
@@ -22,7 +33,7 @@ io.on('connection', (socket: any) => {
       socket.to(socket.id).emit('error-event', 'error: room exists.');
     } else {
       socket.join(roomId);
-      io.emit('send-all-rooms', Array.from(io.sockets.adapter.rooms));
+      io.emit('send-all-rooms', filterRoomsWithTwo(io.sockets.adapter.rooms));
     }
   });
 
@@ -30,10 +41,11 @@ io.on('connection', (socket: any) => {
   socket.on('join-session', (roomId: string) => {
     console.log('join session', roomId)
 
-    socket.join(Number(roomId));
+    socket.join(roomId);
+
     let usersInRoom: string[] = [];
     Array.from(io.sockets.adapter.rooms).forEach(room => {
-        if(String(room[0]) === roomId) {
+        if(room[0] === roomId) {
             usersInRoom.push(...Array.from(room[1]))
         }
     });
