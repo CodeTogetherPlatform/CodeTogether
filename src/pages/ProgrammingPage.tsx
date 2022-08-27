@@ -1,25 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '@mui/material/Button';
-import { io } from 'socket.io-client';
-
-//connects to server
-const socket = io('http://localhost:3001');
-//whenever a connection is made
-socket.on('connect', () => {
-  console.log(`You connected with id: ${socket.id}`)
-})
-socket.on('receive-message', string => {
-  console.log('This is when receive-message activates, ', string);
-})
-//emit will take any event and send to server
-socket.emit('custom-event', 'parameters here, can do multiple parameters, this is a static string')
 
 interface ProgrammingPageProps {
-  
+  socket: any;
 }
 type ProgrammingPageComponent = (props: ProgrammingPageProps) => JSX.Element;
 
-export const ProgrammingPage: ProgrammingPageComponent = ({}) => {
+export const ProgrammingPage: ProgrammingPageComponent = ({ socket }) => {
+
+    useEffect(()=>{
+        socket.on('new-message', (message: string, username: string) => {
+            console.log(`This is what we get when new-message activates, message: ${message} username: ${username}`);
+            /**
+             * Add message to chat box state
+             */
+          });
+          
+          socket.on('code-change', (code: string, senderId: string) => {
+              if(senderId !== socket.id) {
+                  //update the code block
+              }
+          })
+    })
+
   const handleClick = () => {
     socket.emit('custom-event', 'Evan McNeely is here!');
   }

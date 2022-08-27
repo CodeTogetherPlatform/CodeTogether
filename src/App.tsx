@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LandingPage } from "./pages/LandingPage";
-// import { ProgrammingPage } from "./pages/ProgrammingPage";
+import { ProgrammingPage } from "./pages/ProgrammingPage";
 import { Header } from "./components/Header";
 import './App.css';
 import { BrowserRouter } from 'react-router-dom';
@@ -31,7 +31,7 @@ function App() {
       <Header/>
       <Toolbar/>
       <LandingPage userName={userName} setUserName={setUserName} socket={socket} />
-      {/* <ProgrammingPage></ProgrammingPage> */}
+      <ProgrammingPage socket={socket}></ProgrammingPage>
     </BrowserRouter>
     
   );
