@@ -1,8 +1,13 @@
 import React from 'react';
 import {Header} from '../components/Header'
 import {ProblemBox} from '../components/ProblemBox'
+import {ChatBox} from '../components/ChatBox'
 import { Container, Grid, Box, Paper } from '@mui/material'
+import Button from '@mui/material/Button';
 
+/*
+Create logic so they can choose if they are driver or navigator
+*/
 
 interface ProgrammingPageProps {};
 
@@ -26,14 +31,18 @@ export const ProgrammingPage: ProgrammingPageComponent = () => {
                   <ProblemBox />
                 </Grid>
                 <Grid id='gold2'>
-
+                  {/* 
+                  Navigator can see the problem, and has a button that the reveal the instructions to the Driver
+                  For the Driver the code is hidden and reveal button disabled
+                  */}
+                  <Button> Reveal instructions to driver </Button>
                 </Grid>
                 <Grid id='gold3'>
                   
                 </Grid>
               </Grid>
               <Grid id='blue2' xs={4}> 
-                blue2
+                <ChatBox/>
               </Grid>
             </Grid>
           </Paper>
