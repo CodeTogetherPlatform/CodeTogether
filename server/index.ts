@@ -1,41 +1,3 @@
-// import express from 'express';
-// import { Request, Response, NextFunction } from 'express';
-
-// const app = express();
-
-// /**
-//  * catch all for non-existent routes
-//  */
-// app.use('/', (req: Request, res: Response) => {
-//     res.status(404).send();
-// })
-
-// /**
-//  * Global error handler
-//  */
-//  app.use('/', (err: any, req: Request, res: Response, next: NextFunction) => {
-//     const defaultErr = {
-//         log: 'Express error handler caught unknown middleware error',
-//         status: 500,
-//         message: { err: 'An error occurred' },
-//     };
-//     const errorObj = { ...defaultErr, ...err };
-//     console.log(errorObj.log);
-//     return res.status(errorObj.status).json(errorObj.message);
-// });
-
-// app.listen(3000, () => {
-//     console.log('Server running on port 3000')
-// })
-
-// import { Require } from 'socket.io';
-
-// const io = require('socket.io')(3001, {
-//     cors: {
-//         origin: ['http://localhost:3000'],
-//     }
-// });
-
 import { Server } from "socket.io";
 
 const io = new Server(3001, {
@@ -59,7 +21,7 @@ io.on('connection', (socket: any) => {
     //emits all rooms, on the event 'send-all-rooms'
     socket.on('get-rooms', () => {
         //TODO send to socket.id only, not all connections
-        io.emit('send-all-rooms', io.sockets.adapter.rooms)
+        io.to(socket.id).emit('send-all-rooms', Array.from(io.sockets.adapter.rooms))
     })
 
     // create room 
@@ -69,8 +31,7 @@ io.on('connection', (socket: any) => {
         }
         else{
             socket.join(roomId);
-            console.log(io.sockets.adapter.rooms);
-            io.emit('send-all-rooms', io.sockets.adapter.rooms)
+            io.emit('send-all-rooms', Array.from(io.sockets.adapter.rooms))
         }
         
     })

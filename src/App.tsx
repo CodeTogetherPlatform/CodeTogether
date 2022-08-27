@@ -11,10 +11,10 @@ import { io, Socket } from 'socket.io-client';
 
 function App() {
   const [userName, setUserName] = useState('');
-  
+
   //connects to server
   const socket: Socket = io('http://localhost:3001');
-
+  
   useEffect(()=> {
     //   whenever a connection is made
       socket.on('connect', () => {

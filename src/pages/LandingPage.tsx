@@ -9,25 +9,45 @@ interface LandingPageProps {
     socket: any;
 };
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      option: React.DetailedHTMLProps<React.OptionHTMLAttributes<HTMLOptionElement >, HTMLOptionElement>;
+    }
+  }
+}
+
 type LandingPageComponent = (props: LandingPageProps) => JSX.Element;
 
 export const LandingPage: LandingPageComponent = ({ setUserName, userName, socket }) => {
     // have state for rooms
-    const [roomList, setRoomList] = useState({});
+    const [roomList, setRoomList] = useState<any[]>([]);
     const [roomToJoin, setRoomToJoin] = useState<null | string>(null)
     useEffect(()=> {
         //handling errors
          socket.on('error-event', (error: any) => {
             console.log(error);
         })
+        
         socket.emit('get-rooms');
 
-        socket.on('send-all-rooms', (rooms: any)=>{ setRoomList(rooms)});
+        socket.on('send-all-rooms', (rooms: any)=>{
+          console.log("This is the rooms coming in: ", rooms)
+          console.log(JSON.stringify(rooms))
+          let roomListArray = [];
+          for(let i = 0; i < rooms.length; i++){
+            if(JSON.stringify(rooms[i][0]).length === 6){
+              roomListArray.push(rooms[i][0])
+            }
+          }
+          console.log(roomListArray);
+          setRoomList(roomListArray);
+        });
     },[]);
 
     const startSession = () => {
         let randomRoomInt = Math.floor(Math.random() * 1000000);
-        while(randomRoomInt in roomList){
+        while(roomList.some((el) => el[0] === randomRoomInt.toString())){
           randomRoomInt = Math.floor(Math.random() * 1000000);
         }
         socket.emit('start-session', randomRoomInt);
@@ -57,14 +77,14 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
         <Button sx={{m:1}}variant="contained" size="large">Join Session</Button>
       </Box>
       <Box sx={{m:1}}>
-        <Select multiple native value={''} onChange={handleChangeRoom} label="Native"
+        <Select multiple native onChange={handleChangeRoom} label="Native"
           inputProps={{
             id: 'select-multiple-native',
           }}
         >
-          {Object.keys(roomList).map((roomId) => (
-            <option key={roomId} value={roomId}>
-              {roomId}
+          {roomList.map((roomNum) => (
+            <option key={roomNum}>
+              {roomNum}
             </option>
           ))}
         </Select>
