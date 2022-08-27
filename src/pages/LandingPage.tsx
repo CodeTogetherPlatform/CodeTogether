@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button';
 import{ Box, TextField, Card, Select } from '@mui/material';
-import { io } from 'socket.io-client';
 
 interface LandingPageProps { 
     setUserName: React.Dispatch<React.SetStateAction<string>>;
@@ -23,29 +22,39 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
     // have state for rooms
     const [roomList, setRoomList] = useState<any[]>([]);
     const [roomToJoin, setRoomToJoin] = useState<null | string>(null)
+    
+    // establish event listeners 
     useEffect(()=> {
         //handling errors
          socket.on('error-event', (error: any) => {
             console.log(error);
         })
         
+        // emits an event to get all the rooms
         socket.emit('get-rooms');
 
+        // receives an event to get the rooms and adds them to state
         socket.on('send-all-rooms', (rooms: any)=>{
-          console.log("This is the rooms coming in: ", rooms)
-          console.log(JSON.stringify(rooms))
           let roomListArray = [];
           for(let i = 0; i < rooms.length; i++){
-            if(JSON.stringify(rooms[i][0]).length === 6){
+            if(String(rooms[i][0]).length === 6 && rooms[i][1].size <= 2){
               roomListArray.push(rooms[i][0])
             }
           }
-          console.log(roomListArray);
           setRoomList(roomListArray);
+        });
+
+        // receives an event to start programming and redirects users
+        socket.on('start-programming', (roomId: any) => {
+            /**
+             * Redirect users to the programming page with the roomId as a parameter
+             */
         });
     },[]);
 
+    // starts a session, making sure the session id doesn't already exist
     const startSession = () => {
+        // each session id is a 6 length integer
         let randomRoomInt = Math.floor(Math.random() * 1000000);
         while(roomList.some((el) => el[0] === randomRoomInt.toString())){
           randomRoomInt = Math.floor(Math.random() * 1000000);
@@ -53,10 +62,14 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
         socket.emit('start-session', randomRoomInt);
     };
 
+    // join a session, depending on the room selected
     const joinSession = () => {
-        socket.emit('join-session', roomToJoin);
+        if(roomToJoin) {
+            socket.emit('join-session', roomToJoin);
+        }
     }
 
+    // sets roomToJoin to the selected room
     const handleChangeRoom = (event: any):void => {
       const options = event.target.options;
       for (let i = 0, l = options.length; i < l; i += 1) {
@@ -74,7 +87,7 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
       <Box sx={{display: 'flex', flexDirection:'column', justifyContent: 'space-around', p: 1, m: 1, maxHeight:'100%' }}>
         <TextField sx={{m:1}} label='UserName' variant='outlined' onChange={(event) => {setUserName(event.target.value)}}></TextField>
         <Button sx={{m:1}} variant="contained" size="large" onClick={startSession}>Start A Session</Button>
-        <Button sx={{m:1}}variant="contained" size="large">Join Session</Button>
+        <Button sx={{m:1}}variant="contained" size="large" onClick={joinSession}>Join Session</Button>
       </Box>
       <Box sx={{m:1}}>
         <Select multiple native onChange={handleChangeRoom} label="Native"

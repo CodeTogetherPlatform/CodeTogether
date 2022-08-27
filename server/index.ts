@@ -8,19 +8,9 @@ const io = new Server(3001, {
 
 io.on('connection', (socket: any) => {
     console.log('someone is connected', socket.id);
-
-    socket.on('custom-event', (string: String) => {
-        console.log(`custom-event fired, received: ${string}`);
-        //handles custom-receive-message
-        //emit sends to ALL clients
-        io.emit('receive-message', string);
-        //this sends to all clients EXCEPT the one who sent it
-        // socket.broadcast.emit('custom-recieve-message', string)
-    })
     
     //emits all rooms, on the event 'send-all-rooms'
     socket.on('get-rooms', () => {
-        //TODO send to socket.id only, not all connections
         io.to(socket.id).emit('send-all-rooms', Array.from(io.sockets.adapter.rooms))
     })
 
@@ -34,5 +24,12 @@ io.on('connection', (socket: any) => {
             io.emit('send-all-rooms', Array.from(io.sockets.adapter.rooms))
         }
         
+    })
+    
+    // join a room
+    socket.on('join-session', (roomId: string) => {
+        socket.join(Number(roomId));
+        const usersInRoom: string[] = Array.from(io.sockets.adapter.rooms[roomId])
+        io.to(usersInRoom).emit('start-programming', roomId);
     })
 })

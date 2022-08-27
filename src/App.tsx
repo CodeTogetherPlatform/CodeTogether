@@ -16,10 +16,14 @@ function App() {
   const socket: Socket = io('http://localhost:3001');
   
   useEffect(()=> {
-    //   whenever a connection is made
+      //   whenever a connection is made
       socket.on('connect', () => {
-        console.log(`You connected with id: ${socket.id}`)
+        console.log(`You connected with id: ${socket.id}`);
       })
+
+      socket.on("disconnect", () => {
+        console.log(`${socket.id} has been disconnected`); 
+      });
   },[])
 
   return (
