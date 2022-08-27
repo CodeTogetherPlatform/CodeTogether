@@ -1,12 +1,12 @@
 import React from 'react';
 import { LandingPage } from "./routes/LandingPage";
 import { ProgrammingPage } from "./routes/ProgrammingPage";
-import { Header } from "./components/Header";
+// import { Header } from "./components/Header";
 import './App.css';
 import {
   Routes,
   Route,
-  Link,
+  // Link,
 } from "react-router-dom";
 
 export default function App() {

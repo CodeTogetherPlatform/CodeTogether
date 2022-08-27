@@ -1,12 +1,7 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Button from '@mui/material/Button';
-import { ProgrammingPage } from './ProgrammingPage';
 import{ Box, TextField, Card } from '@mui/material';
-import {
-  Routes,
-  Route,
-  Link,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 import {Header} from '../components/Header'
 
 interface LandingPageProps { };
@@ -31,9 +26,8 @@ export const LandingPage: LandingPageComponent = () => {
       <Card variant="outlined" sx={{p:1, m:10}}>Sessions will live here, render different component?
       <h3>Open Sessions</h3>
         <Link to="/programmingpage">Join session 1</Link>
-        <p>Join session 2</p>
-        <p>Join session 3</p>
-        
+        <Link to="/programmingpage">Join session 2</Link>
+        <Link to="/programmingpage">Join session 3</Link>
       </Card>
       </Box>
 
