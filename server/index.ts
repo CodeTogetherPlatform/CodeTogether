@@ -1,54 +1,60 @@
-import express from 'express';
-import { Request, Response, NextFunction } from 'express';
-import { createServer } from 'http';
-import { connection, sio } from './utils/socket.js';
-import cors from 'cors';
+import { Server } from 'socket.io';
 
-interface RequestIo extends Request {
-  io?: any;
-}
-
-const app = express();
-const server = createServer(app);
-const io = sio(server);
-connection(io);
-
-const socketIOMiddleware = (req: RequestIo, res: Response, next: NextFunction) => {
-  req.io = io;
-  next();
-};
-
-//CORS
-app.use(cors);
-
-//ROUTES
-app.use('api/joinRoom', socketIOMiddleware, (req: RequestIo, res: Response) => {
-  req.io?.emit('message', `Hello, ${req.originalUrl}`);
-  res.send('hello world');
+const io = new Server(3001, {
+  cors: {
+    origin: ['http://localhost:3000'],
+  },
 });
 
-//LISTEN
-server.listen(3001, () => {
-  console.log('Server running on port 3001');
-});
+io.on('connection', (socket: any) => {
+  console.log('someone is connected', socket.id);
 
-/**
- * catch all for non-existent routes
- */
-app.use('/', (req: Request, res: Response) => {
-  res.status(404).send();
-});
+  const filterRoomsWithTwo = (roomList: Map<string, Set<string>>) => {
+    const arrayRoomList = Array.from(roomList);
+    let filteredRoomList: Array<string> = [];
+    for(let i = 0; i < arrayRoomList.length; i++){
+      if(arrayRoomList[i][0].length === 6 && arrayRoomList[i][1].size === 1){
+        filteredRoomList.push(arrayRoomList[i][0]);
+      }
+    }
+    return filteredRoomList;
+  }
 
-/**
- * Global error handler
- */
-app.use('/', (err: any, req: Request, res: Response, next: NextFunction) => {
-  const defaultErr = {
-    log: 'Express error handler caught unknown middleware error',
-    status: 500,
-    message: { err: 'An error occurred' },
-  };
-  const errorObj = { ...defaultErr, ...err };
-  console.log(errorObj.log);
-  return res.status(errorObj.status).json(errorObj.message);
+  //emits all rooms, on the event 'send-all-rooms'
+  socket.on('get-rooms', () => {
+    io.to(socket.id).emit('send-all-rooms', filterRoomsWithTwo(io.sockets.adapter.rooms));
+  });
+
+  // create room
+  socket.on('start-session', (roomId: string) => {
+    console.log('start session', roomId)
+
+    if (roomId in io.sockets.adapter.rooms) {
+      socket.to(socket.id).emit('error-event', 'error: room exists.');
+    } else {
+      socket.join(roomId);
+      io.emit('send-all-rooms', filterRoomsWithTwo(io.sockets.adapter.rooms));
+    }
+  });
+
+  // join a room
+  socket.on('join-session', (roomId: string) => {
+    console.log('join session', roomId)
+
+    socket.join(roomId);
+
+    let usersInRoom: string[] = [];
+    Array.from(io.sockets.adapter.rooms).forEach(room => {
+        if(room[0] === roomId) {
+            usersInRoom.push(...Array.from(room[1]))
+        }
+    });
+
+    if (usersInRoom.length === 2) {
+        console.log('users that are starting a session in: ', usersInRoom);
+        io.to(usersInRoom).emit('start-programming', roomId);
+    } else {
+        socket.to(socket.id).emit('error-event', 'no room');
+    }
+  });
 });
