@@ -1,7 +1,9 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { LandingPage } from "./routes/LandingPage";
 import { ProgrammingPage } from "./routes/ProgrammingPage";
-// import { Header } from "./components/Header";
+import { Header } from "./components/Header";
+import { io, Socket } from 'socket.io-client';
 import './App.css';
 import {
   Routes,
@@ -11,11 +13,27 @@ import {
 
 export default function App() {
 
+  const [userName, setUserName] = useState('');
+
+  //connects to server
+  const socket: Socket = io('http://localhost:3001');
+  
+  useEffect(()=> {
+      //   whenever a connection is made
+      socket.on('connect', () => {
+        console.log(`You connected with id: ${socket.id}`);
+      })
+
+      socket.on("disconnect", () => {
+        console.log(`${socket.id} has been disconnected`); 
+      });
+  },[])
+
   return (
     <>
     <Routes>
    {/* <Header/> */}
-      <Route path="/" element={<LandingPage/>} />
+      <Route path="/" element={<LandingPage userName={userName} setUserName={setUserName} socket={socket}/>} />
       <Route path="/programmingpage" element={<ProgrammingPage/>} />
       <Route
         path="*"
@@ -27,7 +45,5 @@ export default function App() {
       />
     </Routes>
     </>
-  );
+  )
 }
-  
-
