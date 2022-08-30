@@ -1,14 +1,9 @@
 
 import React, {useState, useEffect} from 'react'
 import Button from '@mui/material/Button';
-<<<<<<< HEAD:src/routes/LandingPage.tsx
-import{ Box, TextField, Card, Select } from '@mui/material';
+import{ Box, TextField, Select } from '@mui/material';
 import { Link } from "react-router-dom";
 import {Header} from '../components/Header'
-
-=======
-import{ Box, TextField, Select } from '@mui/material';
->>>>>>> dev:src/pages/LandingPage.tsx
 
 interface LandingPageProps { 
     setUserName: React.Dispatch<React.SetStateAction<string>>;
