@@ -4,6 +4,7 @@ import {ProblemBox} from '../components/ProblemBox'
 import {ChatBox} from '../components/ChatBox'
 import { Container, Grid, Box, Paper } from '@mui/material'
 import Button from '@mui/material/Button';
+import {useLocation} from 'react-router-dom';
 
 /*
 Create logic so they can choose if they are driver or navigator
@@ -14,11 +15,12 @@ interface ProgrammingPageProps {
 }
 
 type ProgrammingPageComponent = (props: ProgrammingPageProps) => JSX.Element;
-
 const user1: string = 'User 1';
 const user2: string = 'User 2';
 
 export const ProgrammingPage: ProgrammingPageComponent = ({socket}) => {
+  const location = useLocation();
+  console.log(location);
 
   useEffect(()=>{
     socket.on('new-message', (message: string, username: string) => {
@@ -36,7 +38,7 @@ export const ProgrammingPage: ProgrammingPageComponent = ({socket}) => {
 })
 
 const handleClick = () => {
-socket.emit('custom-event', 'Evan McNeely is here!');
+    socket.emit('custom-event', 'Evan McNeely is here!');
 }
 
   return (

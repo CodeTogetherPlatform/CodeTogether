@@ -36,7 +36,7 @@ export default function App() {
     <Routes>
    {/* <Header/> */}
       <Route path="/" element={<LandingPage userName={userName} setUserName={setUserName} socket={socket}/>} />
-      <Route path="/programmingpage" element={<ProgrammingPage socket={socket}/>} />
+      <Route path="/pp/:roomId" element={<ProgrammingPage socket={socket}/>} />
       <Route
         path="*"
         element={
