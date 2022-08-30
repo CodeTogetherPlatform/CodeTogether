@@ -1,6 +1,14 @@
-import React, { useEffect, useState } from 'react'
+
+import React, {useState, useEffect} from 'react'
 import Button from '@mui/material/Button';
+<<<<<<< HEAD:src/routes/LandingPage.tsx
+import{ Box, TextField, Card, Select } from '@mui/material';
+import { Link } from "react-router-dom";
+import {Header} from '../components/Header'
+
+=======
 import{ Box, TextField, Select } from '@mui/material';
+>>>>>>> dev:src/pages/LandingPage.tsx
 
 interface LandingPageProps { 
     setUserName: React.Dispatch<React.SetStateAction<string>>;
@@ -79,15 +87,20 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
     }
 
   return (
+    <>
+    <Header />
     <div style={{maxHeight:'100%', maxWidth: '100%'}}>
 
-    <Box style={{display: 'flex', justifyContent: 'space-around', }} >
+
+    <Box style={{display: 'flex', justifyContent: 'space-around', height:'600px'}} >
+
       <Box sx={{display: 'flex', flexDirection:'column', justifyContent: 'space-around', p: 1, m: 1, maxHeight:'100%' }}>
-        <TextField sx={{m:1}} label='UserName' variant='outlined' onChange={(event) => {setUserName(event.target.value)}}></TextField>
+        <TextField sx={{m:1}} label='UserName' variant='outlined' onChange={(event: any) => {setUserName(event.target.value)}}></TextField>
         <Button sx={{m:1}} variant="contained" size="large" onClick={startSession}>Start A Session</Button>
         <Button sx={{m:1}}variant="contained" size="large" onClick={joinSession}>Join Session</Button>
       </Box>
       <Box sx={{m:1}}>
+
         <Select multiple native onChange={handleChangeRoom} label="Native"
           inputProps={{
             id: 'select-multiple-native',
@@ -104,5 +117,6 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
     </Box>
    
     </div>
+    </>
   )
 }

@@ -1,15 +1,19 @@
+
 import React, { useEffect, useState } from 'react';
-import { LandingPage } from "./pages/LandingPage";
-import { ProgrammingPage } from "./pages/ProgrammingPage";
+import { LandingPage } from "./routes/LandingPage";
+import { ProgrammingPage } from "./routes/ProgrammingPage";
+
 import { Header } from "./components/Header";
-import './App.css';
-import { BrowserRouter } from 'react-router-dom';
-import { Toolbar } from '@mui/material';
-
 import { io, Socket } from 'socket.io-client';
+import './App.css';
+import {
+  Routes,
+  Route,
+  // Link,
+} from "react-router-dom";
 
+export default function App() {
 
-function App() {
   const [userName, setUserName] = useState('');
 
   //connects to server
@@ -27,14 +31,22 @@ function App() {
   },[])
 
   return (
-    <BrowserRouter>
-      <Header/>
-      <Toolbar/>
-      <LandingPage userName={userName} setUserName={setUserName} socket={socket} />
-      <ProgrammingPage socket={socket}></ProgrammingPage>
-    </BrowserRouter>
-    
-  );
-}
 
-export default App;
+    <>
+    <Routes>
+   {/* <Header/> */}
+      <Route path="/" element={<LandingPage userName={userName} setUserName={setUserName} socket={socket}/>} />
+      <Route path="/programmingpage" element={<ProgrammingPage socket={socket}/>} />
+      <Route
+        path="*"
+        element={
+          <main style={{ padding: "1rem" }}>
+            <p>There's nothing here!</p>
+          </main>
+        }
+      />
+    </Routes>
+    </>
+  )
+
+}
