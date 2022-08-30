@@ -57,4 +57,14 @@ io.on('connection', (socket: any) => {
         socket.to(socket.id).emit('error-event', 'no room');
     }
   });
+
+  // on new messages
+  socket.on('message-created', (username: string, message: string, roomId: string) => {
+    socket.to(roomId).emit('new-message', message, username);
+  })
+
+  // on code changes
+  socket.on('code-update', (code: string, roomId: string) => {
+    socket.to(roomId).emit('code-change', code, socket.id);
+  })
 });

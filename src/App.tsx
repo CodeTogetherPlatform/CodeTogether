@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { LandingPage } from "./routes/LandingPage";
 import { ProgrammingPage } from "./routes/ProgrammingPage";
+
 import { Header } from "./components/Header";
 import { io, Socket } from 'socket.io-client';
 import './App.css';
@@ -30,11 +31,12 @@ export default function App() {
   },[])
 
   return (
+
     <>
     <Routes>
    {/* <Header/> */}
       <Route path="/" element={<LandingPage userName={userName} setUserName={setUserName} socket={socket}/>} />
-      <Route path="/programmingpage" element={<ProgrammingPage/>} />
+      <Route path="/programmingpage" element={<ProgrammingPage socket={socket}/>} />
       <Route
         path="*"
         element={
@@ -46,4 +48,5 @@ export default function App() {
     </Routes>
     </>
   )
+
 }

@@ -1,10 +1,14 @@
 
 import React, {useState, useEffect} from 'react'
 import Button from '@mui/material/Button';
+<<<<<<< HEAD:src/routes/LandingPage.tsx
 import{ Box, TextField, Card, Select } from '@mui/material';
 import { Link } from "react-router-dom";
 import {Header} from '../components/Header'
 
+=======
+import{ Box, TextField, Select } from '@mui/material';
+>>>>>>> dev:src/pages/LandingPage.tsx
 
 interface LandingPageProps { 
     setUserName: React.Dispatch<React.SetStateAction<string>>;
@@ -31,7 +35,7 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
     // establish event listeners 
     useEffect(()=> {
         //handling errors
-         socket.on('error-event', (error: any) => {
+         socket.on('error-event', (error: string) => {
             console.log('error:', error);
         })
         
@@ -45,7 +49,7 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
         });
 
         // receives an event to start programming and redirects users
-        socket.on('start-programming', (roomId: any) => {
+        socket.on('start-programming', (roomId: string) => {
             console.log('time to redirect to programming page with roomId: ', roomId)
             /**
              * Redirect users to the programming page with the roomId as a parameter
@@ -56,7 +60,7 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
     // starts a session, making sure the session id doesn't already exist
     const startSession = () => {
         // each session id is a 6 length integer
-        // enusure that the 6 digit integer is unique
+        // ensure that the 6 digit integer is unique
         let randomRoomInt = Math.floor(Math.random() * 1000000);
         while(roomList.some((el) => el[0] === randomRoomInt.toString())){
           randomRoomInt = Math.floor(Math.random() * 1000000);

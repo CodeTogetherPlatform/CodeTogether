@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Header} from '../components/Header'
 import {ProblemBox} from '../components/ProblemBox'
 import {ChatBox} from '../components/ChatBox'
@@ -9,15 +9,39 @@ import Button from '@mui/material/Button';
 Create logic so they can choose if they are driver or navigator
 */
 
-interface ProgrammingPageProps {};
+interface ProgrammingPageProps {
+  socket: any;
+}
 
 type ProgrammingPageComponent = (props: ProgrammingPageProps) => JSX.Element;
 
 const user1: string = 'User 1';
 const user2: string = 'User 2';
 
-export const ProgrammingPage: ProgrammingPageComponent = () => {
+export const ProgrammingPage: ProgrammingPageComponent = ({socket}) => {
+
+  useEffect(()=>{
+    socket.on('new-message', (message: string, username: string) => {
+        console.log(`This is what we get when new-message activates, message: ${message} username: ${username}`);
+        /**
+         * Add message to chat box state
+         */
+      });
+      
+      socket.on('code-change', (code: string, senderId: string) => {
+          if(senderId !== socket.id) {
+              //update the code block
+          }
+      })
+})
+
+const handleClick = () => {
+socket.emit('custom-event', 'Evan McNeely is here!');
+}
+
   return (
+
+    
     <>
       <Header />
         <Container>
@@ -47,7 +71,7 @@ export const ProgrammingPage: ProgrammingPageComponent = () => {
             </Grid>
           </Paper>
         </Container>
-    
+        <Button variant="contained" onClick={handleClick}>Push This</Button>
     </>
   )
 }
