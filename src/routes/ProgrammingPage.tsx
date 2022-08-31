@@ -1,10 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Header} from '../components/Header'
 import {ProblemBox} from '../components/ProblemBox'
 import {ChatBox} from '../components/ChatBox'
 import { Container, Grid, Box, Paper } from '@mui/material'
 import Button from '@mui/material/Button';
-import {useLocation} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 
 /*
 Create logic so they can choose if they are driver or navigator
@@ -12,15 +12,14 @@ Create logic so they can choose if they are driver or navigator
 
 interface ProgrammingPageProps {
   socket: any;
+  username: string;
 }
 
 type ProgrammingPageComponent = (props: ProgrammingPageProps) => JSX.Element;
-const user1: string = 'User 1';
-const user2: string = 'User 2';
 
-export const ProgrammingPage: ProgrammingPageComponent = ({socket}) => {
-  const location = useLocation();
-  console.log(location);
+export const ProgrammingPage: ProgrammingPageComponent = ({socket, username}) => {
+    const[partner, setPartner] = useState('');
+  const { roomId }= useParams();
 
   useEffect(()=>{
     socket.on('new-message', (message: string, username: string) => {
@@ -35,21 +34,28 @@ export const ProgrammingPage: ProgrammingPageComponent = ({socket}) => {
               //update the code block
           }
       })
+
+      // start the process of exchanging usernames  
+      socket.emit('get-pp', roomId);
+
+      // when username is requested, send it to the room
+      socket.on('requested-pp', ()=> {
+        socket.emit('send-pp', roomId, username);
+      });
+
+      // when a username is recieved, save it as a partner
+      socket.on('receive-pp', (pp: string) => {
+        if(pp !== username) setPartner(pp);
+      })
 })
 
-const handleClick = () => {
-    socket.emit('custom-event', 'Evan McNeely is here!');
-}
-
   return (
-
-    
     <>
       <Header />
         <Container>
           <Paper variant='outlined' elevation={3} >
             <Box sx={{display:'flex', justifyContent:'center'}} >
-              <h1>{`Hello ${user1}, you are working with ${user2}`}</h1>
+              <h1>{`Hello ${username}, you are working with ${partner}`}</h1>
             </Box>
             <Grid container >
               <Grid id='blue1' xs={6}>
@@ -73,7 +79,6 @@ const handleClick = () => {
             </Grid>
           </Paper>
         </Container>
-        <Button variant="contained" onClick={handleClick}>Push This</Button>
     </>
   )
 }

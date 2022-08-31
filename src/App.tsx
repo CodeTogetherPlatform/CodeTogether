@@ -12,11 +12,11 @@ import {
 } from "react-router-dom";
 
 export default function App() {
-
+    
   const [userName, setUserName] = useState('');
-
+    
   //connects to server
-  const socket: Socket = io('http://localhost:3001');
+  let socket: Socket= io('http://localhost:3001');
   
   useEffect(()=> {
       //   whenever a connection is made
@@ -33,7 +33,7 @@ export default function App() {
     <Routes>
    {/* <Header/> */}
       <Route path="/" element={<LandingPage userName={userName} setUserName={setUserName} socket={socket}/>} />
-      <Route path="/pp/:roomId" element={<ProgrammingPage socket={socket}/>} />
+      <Route path="/pp/:roomId" element={<ProgrammingPage socket={socket}username={userName}/>} />
       <Route
         path="*"
         element={
