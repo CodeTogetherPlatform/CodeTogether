@@ -7,49 +7,46 @@ import Button from '@mui/material/Button';
 import CodeMirror from '@uiw/react-codemirror';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import { javascript } from '@codemirror/lang-javascript';
-import {useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 interface ProgrammingPageProps {
+  userName: string;
   socket: any;
-  username: string;
 }
 
 type ProgrammingPageComponent = (props: ProgrammingPageProps) => JSX.Element;
 
-export const ProgrammingPage: ProgrammingPageComponent = ({socket, username}) => {
-    const[partner, setPartner] = useState('');
-  const { roomId }= useParams();
+export const ProgrammingPage: ProgrammingPageComponent = ({ socket, userName }) => {
+  const [partner, setPartner] = useState('');
+  const { roomId } = useParams();
 
   const [code, setCode] = useState("// ADD CODE HERE | Remember to return your value to see output");
   const [output, setOutput] = useState('');
 
-
   useEffect(() => {
-    socket.on('new-message', (message: string, username: string) => {
-        console.log(`This is what we get when new-message activates, message: ${message} username: ${username}`);
-        /**
-         * Add message to chat box state
-         */
-      });
-      
-      socket.on('code-change', (code: string, senderId: string) => {
-          if(senderId !== socket.id) {
-              //update the code block
-          }
-      })
+    socket.on('new-message', (message: string, userName: string) => {
+      console.log(`This is what we get when new-message activates, message: ${message} userName: ${userName}`);
+      /**
+       * Add message to chat box state
+       */
+    });
 
-      // start the process of exchanging usernames  
-      socket.emit('get-pp', roomId);
+    socket.on('code-change', (code: string) => {
+      setCode(code);
+    })
 
-      // when username is requested, send it to the room
-      socket.on('requested-pp', ()=> {
-        socket.emit('send-pp', roomId, username);
-      });
+    // start the process of exchanging userNames  
+    socket.emit('get-pp', roomId);
 
-      // when a username is recieved, save it as a partner
-      socket.on('receive-pp', (pp: string) => {
-        if(pp !== username) setPartner(pp);
-      })
+    // when userName is requested, send it to the room
+    socket.on('requested-pp', () => {
+      socket.emit('send-pp', roomId, userName);
+    });
+
+    // when a userName is recieved, save it as a partner
+    socket.on('receive-pp', (pp: string) => {
+      if (pp !== userName) setPartner(pp);
+    })
 
     socket.on('code-change', (code: string, senderId: string) => {
       if (senderId !== socket.id) {
@@ -63,7 +60,10 @@ export const ProgrammingPage: ProgrammingPageComponent = ({socket, username}) =>
     // setOutput(eval(code));
     var result = new Function(code)();
     setOutput(result);
+  }
 
+  if(!roomId){
+    return <Typography>Error: No room id</Typography>
   }
 
   return (
@@ -72,7 +72,7 @@ export const ProgrammingPage: ProgrammingPageComponent = ({socket, username}) =>
       <Container>
         <Paper variant='outlined' elevation={0} >
           <Box sx={{ display: 'flex', justifyContent: 'center' }} >
-            <h1>{`Hello ${username}, you are working with ${partner}`}</h1>
+            <h1>{`Hello ${userName}, you are working with ${partner}`}</h1>
           </Box>
           <Grid container >
             <Grid id='blue1' item xs={6}>
@@ -82,26 +82,28 @@ export const ProgrammingPage: ProgrammingPageComponent = ({socket, username}) =>
               <Grid id='gold2'>
                 <CodeMirror
                   value={code}
-                  height="800px"
+                  height="600px"
                   theme={dracula}
                   extensions={[javascript({ jsx: true })]}
                   onChange={(value: any, viewUpdate: any) => {
-                    setCode(value);
+                    socket.emit('code-update', value, roomId);
+                    // setCode(value);
                   }}
                 />
-                <Button> Reveal instructions to driver </Button>
+                <Button variant="contained" sx={{ mr:2 }} onClick={handleClick}>Run Code</Button>
+                <Button variant="outlined"> Reveal instructions to driver </Button>
               </Grid>
               <Grid id='gold3'>
-                <Typography>{output}</Typography>
+                <Typography variant="h1" sx={{ background: "main" }}>{output}</Typography>
               </Grid>
             </Grid>
             <Grid id='blue2' item xs={4}>
-              <ChatBox />
+              <ChatBox userName={userName} socket={socket} joinedRoomId={roomId} />
             </Grid>
           </Grid>
         </Paper>
       </Container>
-      <Button variant="contained" onClick={handleClick}>Run Code</Button>
+      
     </>
   )
 }

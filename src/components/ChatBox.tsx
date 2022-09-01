@@ -1,55 +1,82 @@
-import { 
-  Button, 
-  Paper, 
-  Card, 
-  Box, 
-  Typography, 
-  TextField  
+import {
+  Button,
+  Paper,
+  Card,
+  Box,
+  Typography,
+  TextField
 } from '@mui/material'
-import * as React from 'react';
+import React, { useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 
 interface messageProps {
-  msgId: number;
   username: string;
   message: string;
 }
-const messages: messageProps[] = [
-  {
-    msgId: 1,
-    username: 'Patrick',
-    message: 'yo'
-  },
-  {
-    msgId: 2,
-    username: 'Yuki',
-    message: 'hey'
-  }
-]
 
-
-interface ChatBoxProps {};
+interface ChatBoxProps {
+  userName: string;
+  socket: any;
+  joinedRoomId: string;
+};
 
 type ChatBoxComponent = (props: ChatBoxProps) => JSX.Element;
+interface MessageObject {
+  message: string;
+  userName: string;
+}
 
-export const ChatBox: ChatBoxComponent = () => {
+export const ChatBox: ChatBoxComponent = ({ userName, joinedRoomId, socket }) => {
+
+  const [message, setMessage] = useState('');
+  const [messageList, setMessageList] = useState<MessageObject[]>([]);
+
+  socket.on('new-message', (messageR: string, userNameR: string) => {
+    const messageObject = { 'message': messageR, 'userName': userNameR };
+    console.log(messageObject);
+    setMessageList([...messageList, messageObject]);
+  })
+
+  const MessageList = () => {
+    return (
+      <List>
+        {messageList.map((message: MessageObject, index: number) => {
+          return (
+            <ListItem key={index}>
+              <ListItemText
+                primary={message.userName}
+                secondary={message.message}
+              />
+            </ListItem>
+          )
+        })}
+      </List>
+    )
+  }
+
+  const sendMessage = () => {
+    if (message) {
+      socket.emit('message-created', userName, message, joinedRoomId);
+    }
+  }
+
   return (
     <>
-    <Paper>
-      <Typography>Chat Box</Typography>
-      <Card>
-        <Box>
-          <MessageList />
-        </Box>
-        <Box>
-          <TextField size='small'>Message</TextField>
-        <Button variant='contained'>submit</Button>
-        </Box>
-      </Card>
-    </Paper>
+      <Paper>
+        <Typography>Chat Box</Typography>
+        <Card>
+          <Box>
+            <MessageList />
+          </Box>
+          <Box>
+            <TextField size='small' onChange={(event: any) => { setMessage(event.target.value) }}>Message</TextField>
+            <Button variant='contained' onClick={sendMessage}>submit</Button>
+          </Box>
+        </Card>
+      </Paper>
     </>
   )
 }
@@ -57,21 +84,5 @@ export const ChatBox: ChatBoxComponent = () => {
 /*
   - at bottom textarea and a submit button
   - add messages to a fi
-*/ 
+*/
 
-const MessageList = () => {
-  return(
-      <List>
-        {messages.map(message => {
-          return (
-            <ListItem key={message.msgId}>
-              <ListItemText
-                primary = {message.username}
-                secondary = {message.message}
-              />
-            </ListItem>
-          )
-        })}
-      </List>
-  ) 
-}

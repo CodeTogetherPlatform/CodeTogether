@@ -11,13 +11,15 @@ export const ProblemBox: ProblemBoxComponent = () => {
   return (
     <Card>
       <Box p={2}>
-        <Typography> Problem: Two Sum</Typography>
-        <Typography> Difficulty: Easy</Typography>
-        <p>Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+        <Typography> Problem: Five Sum</Typography>
+        <Typography> Difficulty: Very Easy</Typography>
+        <p>Given an array of integers that can be positive or negative and an integer target, return indices of five numbers such that they add up to target.</p>
 
-        You may assume that each input would have exactly one solution, and you may not use the same element twice.
+        <p>You may assume that each input might have multiple solutions, and you may not use the same element twice.</p>
 
-        You can return the answer in any order.</p>
+        <p>Return all solutions as a nested array.</p>
+        
+        <p>Challenge: Achieve this in O(N) time complexity and O(1) space complexity.</p>
       </Box>
     </Card>
   )

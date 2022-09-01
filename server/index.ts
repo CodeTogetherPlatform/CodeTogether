@@ -58,13 +58,13 @@ io.on('connection', (socket: any) => {
   });
 
   // on new messages
-  socket.on('message-created', (username: string, message: string, roomId: string) => {
-    socket.to(roomId).emit('new-message', message, username);
+  socket.on('message-created', (userName: string, message: string, roomId: string) => {
+    io.to(roomId).emit('new-message', message, userName);
   })
 
   // on code changes
   socket.on('code-update', (code: string, roomId: string) => {
-    socket.to(roomId).emit('code-change', code, socket.id);
+    io.to(roomId).emit('code-change', code);
   })
 
   socket.on('get-pp', (roomId:string) => {

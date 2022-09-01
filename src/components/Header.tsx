@@ -11,7 +11,7 @@ type HeaderComponent = (props: HeaderProps) => JSX.Element;
 export const Header: HeaderComponent = ({}) => {
   return (
     <AppBar position='sticky'>
-        <Typography variant="h3">CodeTogether</Typography>
+        <Typography variant="h3" sx={{ m:2 }}>CodeTogether</Typography>
     </AppBar>
   )
 }

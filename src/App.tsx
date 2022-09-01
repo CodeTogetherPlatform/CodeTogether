@@ -32,7 +32,7 @@ export default function App() {
     <Routes>
    {/* <Header/> */}
       <Route path="/" element={<LandingPage userName={userName} setUserName={setUserName} socket={socket}/>} />
-      <Route path="/pp/:roomId" element={<ProgrammingPage socket={socket}username={userName}/>} />
+      <Route path="/pp/:roomId" element={<ProgrammingPage socket={socket} userName={userName}/>} />
       <Route
         path="*"
         element={
