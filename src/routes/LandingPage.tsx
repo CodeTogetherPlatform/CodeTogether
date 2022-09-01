@@ -7,7 +7,7 @@ import {Header} from '../components/Header';
 import {useNavigate} from 'react-router-dom';
 
 interface LandingPageProps { 
-    setUserName: React.Dispatch<React.SetStateAction<string>>;
+    setUserName: any;
     userName: string;
     socket: any;
 };
