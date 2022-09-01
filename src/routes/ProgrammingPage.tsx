@@ -31,10 +31,8 @@ export const ProgrammingPage: ProgrammingPageComponent = ({ socket, userName }) 
        */
     });
 
-    socket.on('code-change', (code: string, senderId: string) => {
-      if (senderId !== socket.id) {
-        //update the code block
-      }
+    socket.on('code-change', (code: string) => {
+      setCode(code);
     })
 
     // start the process of exchanging userNames  
@@ -84,14 +82,16 @@ export const ProgrammingPage: ProgrammingPageComponent = ({ socket, userName }) 
               <Grid id='gold2'>
                 <CodeMirror
                   value={code}
-                  height="800px"
+                  height="600px"
                   theme={dracula}
                   extensions={[javascript({ jsx: true })]}
                   onChange={(value: any, viewUpdate: any) => {
-                    setCode(value);
+                    socket.emit('code-update', value, roomId);
+                    // setCode(value);
                   }}
                 />
-                <Button variant="contained"> Reveal instructions to driver </Button>
+                <Button variant="contained" sx={{ mr:2 }} onClick={handleClick}>Run Code</Button>
+                <Button variant="outlined"> Reveal instructions to driver </Button>
               </Grid>
               <Grid id='gold3'>
                 <Typography variant="h1" sx={{ background: "main" }}>{output}</Typography>
@@ -103,7 +103,7 @@ export const ProgrammingPage: ProgrammingPageComponent = ({ socket, userName }) 
           </Grid>
         </Paper>
       </Container>
-      <Button variant="contained" onClick={handleClick}>Run Code</Button>
+      
     </>
   )
 }
