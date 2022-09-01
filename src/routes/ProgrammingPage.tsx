@@ -85,7 +85,7 @@ export const ProgrammingPage: ProgrammingPageComponent = ({socket, username}) =>
                   height="800px"
                   theme={dracula}
                   extensions={[javascript({ jsx: true })]}
-                  onChange={(value, viewUpdate) => {
+                  onChange={(value: any, viewUpdate: any) => {
                     setCode(value);
                   }}
                 />
