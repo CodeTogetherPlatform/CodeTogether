@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { LandingPage } from "./routes/LandingPage";
 import { ProgrammingPage } from "./routes/ProgrammingPage";
-import { Header } from "./components/Header";
 import { io, Socket } from 'socket.io-client';
 import './App.css';
 import {
@@ -10,12 +9,22 @@ import {
   Route,
   // Link,
 } from "react-router-dom";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { PaletteMode } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+
 
 export default function App() {
-    
+  const [theme, setTheme] = useState('light');
   const [userName, setUserName] = useState('');
   //connects to server
   const [socket] = useState(io('http://localhost:3001')) 
+
+  const darkTheme = createTheme({
+  palette: {
+    mode: theme as PaletteMode,
+  },
+  });
 
   useEffect(()=> {
       //   whenever a connection is made
@@ -29,10 +38,12 @@ export default function App() {
   },[])
 
   return (
-    <Routes>
-   {/* <Header/> */}
-      <Route path="/" element={<LandingPage userName={userName} setUserName={setUserName} socket={socket}/>} />
-      <Route path="/pp/:roomId" element={<ProgrammingPage socket={socket} userName={userName}/>} />
+
+      <ThemeProvider theme={darkTheme}>
+      <CssBaseline/>
+      <Routes>
+      <Route path="/" element={<LandingPage userName={userName} setUserName={setUserName} socket={socket} theme={theme} setTheme={setTheme}/>} />
+      <Route path="/pp/:roomId" element={<ProgrammingPage socket={socket} userName={userName} theme={theme} setTheme={setTheme}/>} />
       <Route
         path="*"
         element={
@@ -41,7 +52,9 @@ export default function App() {
           </main>
         }
       />
-    </Routes>
+         </Routes>
+      </ThemeProvider>
+ 
   )
 
 }
