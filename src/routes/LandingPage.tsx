@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {Header} from '../components/Header'
 
 interface LandingPageProps { 
-    setUserName: React.Dispatch<React.SetStateAction<string>>;
+    setUserName: any;
     userName: string;
     socket: any;
 };
@@ -23,10 +23,10 @@ declare global {
 type LandingPageComponent = (props: LandingPageProps) => JSX.Element;
 
 export const LandingPage: LandingPageComponent = ({ setUserName, userName, socket }) => {
+    const navigate = useNavigate();
     // have state for rooms
     const [roomList, setRoomList] = useState<string[]>([]);
     const [roomToJoin, setRoomToJoin] = useState<null | string>(null)
-    let navigate = useNavigate();
 
     // establish event listeners 
     useEffect(()=> {
@@ -40,16 +40,13 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
 
         // receives an event to get the rooms and adds them to state
         socket.on('send-all-rooms', (rooms: Array<string>)=>{
-            console.log(rooms)
           setRoomList(rooms);
         });
 
         // receives an event to start programming and redirects users
         socket.on('start-programming', (roomId: string) => {
             console.log('time to redirect to programming page with roomId: ', roomId)
-            /**
-             * Redirect users to the programming page with the roomId as a parameter
-             */
+            navigate(`pp/${roomId}`, { replace: true })
         });
     },[]);
 
