@@ -2,9 +2,8 @@
 import React, {useState, useEffect} from 'react'
 import Button from '@mui/material/Button';
 import{ Box, TextField, Select } from '@mui/material';
-import { Link } from "react-router-dom";
-import {Header} from '../components/Header';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import {Header} from '../components/Header'
 
 interface LandingPageProps { 
     setUserName: any;
@@ -28,7 +27,7 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
     // have state for rooms
     const [roomList, setRoomList] = useState<string[]>([]);
     const [roomToJoin, setRoomToJoin] = useState<null | string>(null)
-    
+
     // establish event listeners 
     useEffect(()=> {
         //handling errors
@@ -60,6 +59,7 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
           randomRoomInt = Math.floor(Math.random() * 1000000);
         }
         socket.emit('start-session', String(randomRoomInt));
+        navigate("/programmingpage")
     };
 
     // join a session, depending on the room selected
