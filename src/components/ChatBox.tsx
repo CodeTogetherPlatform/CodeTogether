@@ -34,8 +34,9 @@ export const ChatBox: ChatBoxComponent = ({ userName, joinedRoomId, socket }) =>
   const [message, setMessage] = useState('');
   const [messageList, setMessageList] = useState<MessageObject[]>([]);
 
-  socket.on('new-message', (messageR: string, userNameR:string) => {
-    const messageObject = { 'message': messageR, 'userName': userNameR }
+  socket.on('new-message', (messageR: string, userNameR: string) => {
+    const messageObject = { 'message': messageR, 'userName': userNameR };
+    console.log(messageObject);
     setMessageList([...messageList, messageObject]);
   })
 
@@ -61,7 +62,6 @@ export const ChatBox: ChatBoxComponent = ({ userName, joinedRoomId, socket }) =>
       socket.emit('message-created', userName, message, joinedRoomId);
     }
   }
-
 
   return (
     <>
