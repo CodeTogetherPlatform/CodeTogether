@@ -14,10 +14,9 @@ import {
 export default function App() {
     
   const [userName, setUserName] = useState('');
-    
   //connects to server
-  let socket: Socket= io('http://localhost:3001');
-  
+  const [socket] = useState(io('http://localhost:3001')) 
+
   useEffect(()=> {
       //   whenever a connection is made
       socket.on('connect', () => {

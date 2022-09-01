@@ -70,11 +70,13 @@ io.on('connection', (socket: any) => {
 
   socket.on('get-pp', (roomId:string) => {
     //emit event 'requested-pp to roomId
+    console.log(roomId)
     socket.to(roomId).emit('requested-pp');
   })
 
   socket.on('send-pp', (roomId:string, username:string) => {
     //emit event 'receive-pp' to roomId with username
+    console.log('sending-pp', username)
     socket.to(roomId).emit('receive-pp', username);
 })
 });

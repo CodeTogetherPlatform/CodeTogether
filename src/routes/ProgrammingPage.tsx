@@ -40,11 +40,13 @@ export const ProgrammingPage: ProgrammingPageComponent = ({socket, username}) =>
 
       // when username is requested, send it to the room
       socket.on('requested-pp', ()=> {
+        console.log('requested-pp')
         socket.emit('send-pp', roomId, username);
       });
 
       // when a username is recieved, save it as a partner
       socket.on('receive-pp', (pp: string) => {
+        console.log('pp', pp)
         if(pp !== username) setPartner(pp);
       })
 })
