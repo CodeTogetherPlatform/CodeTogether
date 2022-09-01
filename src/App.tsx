@@ -14,6 +14,7 @@ import {
 export default function App() {
 
   const [userName, setUserName] = useState('');
+  const [joinedRoomId, setJoinedRoomId] = useState('');
 
   //connects to server
   const socket: Socket = io('http://localhost:3001');
@@ -32,8 +33,8 @@ export default function App() {
   return (
     <Routes>
    {/* <Header/> */}
-      <Route path="/" element={<LandingPage userName={userName} setUserName={setUserName} socket={socket}/>} />
-      <Route path="/programmingpage" element={<ProgrammingPage socket={socket}/>} />
+      <Route path="/" element={<LandingPage setUserName={setUserName} userName={userName} socket={socket} setJoinedRoomId={setJoinedRoomId}/>} />
+      <Route path="/programmingpage" element={<ProgrammingPage socket={socket} userName={userName} joinedRoomId={joinedRoomId}/>} />
       <Route
         path="*"
         element={

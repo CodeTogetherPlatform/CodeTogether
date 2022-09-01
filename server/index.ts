@@ -59,8 +59,8 @@ io.on('connection', (socket: any) => {
   });
 
   // on new messages
-  socket.on('message-created', (username: string, message: string, roomId: string) => {
-    socket.to(roomId).emit('new-message', message, username);
+  socket.on('message-created', (userName: string, message: string, roomId: string) => {
+    socket.to(roomId).emit('new-message', message, userName);
   })
 
   // on code changes

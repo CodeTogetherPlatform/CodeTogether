@@ -14,7 +14,9 @@ Create logic so they can choose if they are driver or navigator
 */
 
 interface ProgrammingPageProps {
+  userName: any;
   socket: any;
+  joinedRoomId: string;
 }
 
 type ProgrammingPageComponent = (props: ProgrammingPageProps) => JSX.Element;
@@ -22,7 +24,7 @@ type ProgrammingPageComponent = (props: ProgrammingPageProps) => JSX.Element;
 const user1: string = 'User 1';
 const user2: string = 'User 2';
 
-export const ProgrammingPage: ProgrammingPageComponent = ({ socket }) => {
+export const ProgrammingPage: ProgrammingPageComponent = ({ userName, socket, joinedRoomId }) => {
   const [code, setCode] = useState("// ADD CODE HERE | Remember to return your value to see output");
   const [output, setOutput] = useState('');
 
@@ -46,7 +48,6 @@ export const ProgrammingPage: ProgrammingPageComponent = ({ socket }) => {
     // setOutput(eval(code));
     var result = new Function(code)();
     setOutput(result);
-
   }
 
   return (
@@ -74,14 +75,14 @@ export const ProgrammingPage: ProgrammingPageComponent = ({ socket }) => {
                     setCode(value);
                   }}
                 />
-                <Button> Reveal instructions to driver </Button>
+                <Button variant="contained"> Reveal instructions to driver </Button>
               </Grid>
               <Grid id='gold3'>
-                <Typography>{output}</Typography>
+                <Typography variant="h1" sx={{ background: "main" }}>{output}</Typography>
               </Grid>
             </Grid>
             <Grid id='blue2' item xs={4}>
-              <ChatBox />
+              <ChatBox userName={userName} socket={socket} joinedRoomId={joinedRoomId}/>
             </Grid>
           </Grid>
         </Paper>
