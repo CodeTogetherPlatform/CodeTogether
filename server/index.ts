@@ -51,7 +51,6 @@ io.on('connection', (socket: any) => {
     });
     console.log(usersInRoom);
     if (usersInRoom.length === 2) {
-        console.log('users that are starting a session in: ', usersInRoom);
         io.to(usersInRoom).emit('start-programming', roomId);
     } else {
         socket.to(socket.id).emit('error-event', 'no room');
@@ -70,13 +69,11 @@ io.on('connection', (socket: any) => {
 
   socket.on('get-pp', (roomId:string) => {
     //emit event 'requested-pp to roomId
-    console.log(roomId)
     socket.to(roomId).emit('requested-pp');
   })
 
   socket.on('send-pp', (roomId:string, username:string) => {
     //emit event 'receive-pp' to roomId with username
-    console.log('sending-pp', username)
     socket.to(roomId).emit('receive-pp', username);
 })
 });
