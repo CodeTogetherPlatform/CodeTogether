@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Button from '@mui/material/Button';
-import { Box, TextField, Select, InputLabel, FormControl } from '@mui/material';
+import { Box, TextField, Select, List, ListItemButton, ListItemText } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import { Header } from '../components/Header'
 
@@ -9,6 +9,8 @@ interface LandingPageProps {
   setUserName: any;
   userName: string;
   socket: any;
+  theme: string;
+  setTheme: any;
 };
 
 // this is needed to use the option tag as a JSX Element in the MUI Select component
@@ -22,11 +24,12 @@ declare global {
 
 type LandingPageComponent = (props: LandingPageProps) => JSX.Element;
 
-export const LandingPage: LandingPageComponent = ({ setUserName, userName, socket }) => {
+export const LandingPage: LandingPageComponent = ({ setUserName, userName, socket, theme, setTheme }) => {
   const navigate = useNavigate();
   // have state for rooms
   const [roomList, setRoomList] = useState<string[]>([]);
   const [roomToJoin, setRoomToJoin] = useState<null | string>(null)
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   // establish event listeners 
   useEffect(() => {
@@ -72,19 +75,14 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
   }
 
   // sets roomToJoin to the selected room
-  const handleChangeRoom = (event: any): void => {
-    const options = event.target.options;
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        setRoomToJoin(options[i].value);
-        break;
-      }
-    }
+  const handleChangeRoom = (roomNumSelected: any, index: number): void => {
+    setSelectedIndex(index);
+    setRoomToJoin(roomNumSelected);
   }
 
   return (
     <>
-      <Header />
+      <Header theme={theme} setTheme={setTheme}/>
       <div style={{ maxHeight: '100%', maxWidth: '100%' }}>
 
 
@@ -95,22 +93,12 @@ export const LandingPage: LandingPageComponent = ({ setUserName, userName, socke
             <Button sx={{ m: 1 }} variant="contained" size="large" onClick={startSession}>Start A Session</Button>
             <Button sx={{ m: 1 }} variant="contained" size="large" onClick={joinSession}>Join Session</Button>
           </Box>
-
           <Box sx={{ m: 1 }}>
-            <InputLabel shrink htmlFor="select-multiple-native">
-              Rooms
-            </InputLabel>
-            <Select native open sx={{ height: 400, width: 200 }} onChange={handleChangeRoom}
-              inputProps={{
-                id: 'select-multiple-native',
-              }}
-            >
-              {roomList.map((roomNum) => (
-                <option key={roomNum}>
-                  {roomNum}
-                </option>
+            <List component="nav" aria-label="secondary mailbox folder" sx={{ }}>
+              {roomList.map((roomNum, index) => (
+                <ListItemButton selected={selectedIndex === index} key={index} onClick={(event) => handleChangeRoom(roomNum, index)}><ListItemText primary={roomNum}/></ListItemButton>
               ))}
-            </Select>
+            </List>
           </Box>
 
         </Box>

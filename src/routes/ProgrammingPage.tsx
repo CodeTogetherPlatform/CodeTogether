@@ -12,11 +12,13 @@ import { useParams } from 'react-router-dom';
 interface ProgrammingPageProps {
   userName: string;
   socket: any;
+  theme: string;
+  setTheme: any;
 }
 
 type ProgrammingPageComponent = (props: ProgrammingPageProps) => JSX.Element;
 
-export const ProgrammingPage: ProgrammingPageComponent = ({ socket, userName }) => {
+export const ProgrammingPage: ProgrammingPageComponent = ({ socket, userName, theme, setTheme }) => {
   const { roomId } = useParams();
 
   const [partner, setPartner] = useState('');
@@ -95,7 +97,7 @@ export const ProgrammingPage: ProgrammingPageComponent = ({ socket, userName }) 
 
   return (
     <>
-      <Header />
+      <Header theme={theme} setTheme={setTheme}/>
       <Container>
         <Paper variant='outlined' elevation={0} >
           <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }} >
