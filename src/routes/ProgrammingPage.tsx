@@ -22,7 +22,7 @@ export const ProgrammingPage: ProgrammingPageComponent = ({ socket, userName, th
   const [partner, setPartner] = useState('');
   const { roomId } = useParams();
 
-  const [code, setCode] = useState("// ADD CODE HERE | Remember to return your value to see output");
+  const [code, setCode] = useState("// ADD CODE HERE | Return your value to see output");
   const [output, setOutput] = useState('');
 
   useEffect(() => {
