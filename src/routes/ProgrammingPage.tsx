@@ -36,6 +36,7 @@ export const ProgrammingPage: ProgrammingPageComponent = ({ socket, userName, th
     // });
 
     socket.on('code-change', (code: string, user: string) => {
+      console.log(user, userName)
       if(user !== userName) setCode(code);
     })
 
@@ -119,8 +120,10 @@ export const ProgrammingPage: ProgrammingPageComponent = ({ socket, userName, th
                   theme={dracula}
                   extensions={[javascript({ jsx: true })]}
                   onChange={(value: any, viewUpdate: any) => {
-                      setCode(value);
-                      socket.emit('code-update', value, roomId, userName);
+                      if (control) {
+                        setCode(value);
+                        socket.emit('code-update', value, roomId, userName);
+                      }
                   }}
                 />
                 <Button variant="contained" sx={{ mr:2 }} onClick={handleClick}>Run Code</Button>
